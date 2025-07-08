@@ -3,11 +3,11 @@ import time
 import os 
 
 from CommonHelper import file_to_string
+from CalendarHandler import CalendarHandler
 from dotenv import load_dotenv
 
 # Carrega o .env em um caminho específico
 load_dotenv(dotenv_path="env/.env")
-
 
 class AssistantHandler:
     def __init__(self):
@@ -47,8 +47,41 @@ class AssistantHandler:
         
         # Get the last message which is from the assistant
         return messages.data[0].content[0].text.value
+
+    def handle_required_action(self, run, run_status):
+        
+        calendar_handler = CalendarHandler()
+                
+        tool_call = run_status.required_action.submit_tool_outputs.tool_calls[0]
+        model_dump = run_status.required_action.submit_tool_outputs.model_dump()
+        if tool_call.function.name == "visit_scheduler":
+            response = calendar_handler.schedule_visit(model_dump)
+            self.retrieving_action(run.id, response, tool_call.id)
+
+    def retrieving_action(self, runId, response, tool_call_id):
+        """
+        Processa a resposta do assistente e executa ações específicas
+        """
+        openai.beta.threads.runs.submit_tool_outputs(
+            thread_id=self.threadId,
+            run_id=runId,
+            tool_outputs=[
+                    {
+                    "tool_call_id": tool_call_id,
+                    "output": response
+                    }
+                ],
+                stream=True
+            )
     
-    
+        while True:
+            run_status = openai.beta.threads.runs.retrieve(
+                thread_id=self.threadId,
+                run_id=runId
+            )
+            if run_status.status == "completed":
+                print("Ação concluída com sucesso!")
+                break
 
     def get_initial_message(self):
         """

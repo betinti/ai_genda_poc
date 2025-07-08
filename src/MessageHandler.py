@@ -1,10 +1,12 @@
+from ChatHandler import ChatHandler
 from src.AssitantHandler import AssistantHandler
-
 
 class MessageHandler:
     def __init__(self):
-        self.messages = []
-        
+        """
+        Initializes the MessageHandler class.
+        """
+            
     def handle_message(self, message): #TODO: type the param
         """
         Handles incoming messages and stores them in the message list.
@@ -12,12 +14,15 @@ class MessageHandler:
         Args:
             message (str): The message to be handled.
         """
-        #TODO: Send it to GPT Assitant
+        #Send the message to GPT Assitant
         assitant_handler = AssistantHandler()
         
         response = assitant_handler.get_assistant_response(message)
         
-        #TODO: Send the response to the user
+        #Send the response to the user
+        chat_handler = ChatHandler()
         
-        self.messages.append(message)
+        chat_handler.send_message(response, message['from'])
+                
+        
         return {"status": "success", "message": "Message received successfully."}
