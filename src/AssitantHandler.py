@@ -2,8 +2,8 @@ import openai
 import time
 import os 
 
-from CommonHelper import file_to_string
-from CalendarHandler import CalendarHandler
+from src.CommonHelper import file_to_string
+from src.CalendarHandler import CalendarHandler
 from dotenv import load_dotenv
 
 # Carrega o .env em um caminho específico

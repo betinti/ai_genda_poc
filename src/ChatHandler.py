@@ -1,5 +1,4 @@
 import os
-import time
 
 from twilio.rest import Client
 from dotenv import load_dotenv

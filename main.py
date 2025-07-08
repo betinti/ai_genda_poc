@@ -2,7 +2,7 @@ import psutil
 import datetime
 
 from fastapi import FastAPI
-from MessageHandler import MessageHandler
+from src.MessageHandler import MessageHandler
 
 app = FastAPI()
 
@@ -15,8 +15,14 @@ def health():
         'memory': f"{psutil.virtual_memory().percent}%"
     }
 
+@app.post("/send-initial-message")
+def recive_message(to_phone_number: str):
+    message_handler = MessageHandler()
+    response = message_handler.initialize_conversation(to_phone_number)
+    return {"response": response}
+
 @app.post("/recive-message")
-def recive_message(message):
+def recive_message(message: str):
     message_handler = MessageHandler()
     response = message_handler.handle_message(message)
     return {"response": response}
