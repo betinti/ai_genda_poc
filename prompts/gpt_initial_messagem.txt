@@ -1,0 +1,15 @@
+Crie uma mensagem promocional clara, objetiva e impactante para clientes interessados no BYD King.
+Contexto: A mensagem será enviada via WhatsApp e redes sociais.
+Objetivo: Destacar os principais benefícios do BYD King, gerar interesse imediato e motivar o cliente a agendar um test-drive ou visitar a concessionária.
+Tom: Confiante, moderno e acolhedor, com chamada clara para ação.
+Destaques que devem aparecer (adapte conforme necessário):
+– Tecnologia de ponta e inovação BYD
+– Conforto superior
+– Eficiência energética e sustentabilidade (caso seja híbrido ou elétrico)
+– Design que impõe presença
+– Condições exclusivas ou benefícios de compra atuais
+
+Formato final esperado:
+– Mensagem com até 3 linhas para WhatsApp OU
+– Texto promocional curto (até 250 caracteres) para imagem ou story
+– Incluir chamada para ação como "Agende seu test-drive" ou "Venha conhecer hoje".
