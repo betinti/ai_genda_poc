@@ -2,6 +2,8 @@ import pytz
 import os
 import pickle
 
+from src.CommonHelper import try_to_read_files
+
 from datetime import datetime, timedelta
 from google.auth.transport.requests import Request
 from google_auth_oauthlib.flow import InstalledAppFlow
@@ -14,8 +16,9 @@ load_dotenv(dotenv_path="env/.env")
 
 class CalendarHandler:
     def __init__(self):
-        self.credentials_file = 'etc/secrets/credentials.json'
-        self.token_file = 'etc/secrets/token.pickle'
+        secret_path = os.getenv('GOOGLE_SECRETS_PATH')
+        self.credentials_file = f'{secret_path}credentials.json'
+        self.token_file = f'{secret_path}token.pickle'
         self.service = None
         self.scopes = [os.getenv('GOOGLE_CALENDAR_SCOPE')]
         self.max_simultaneous_agendas = 5  # Limite de agendamentos simultâneos
@@ -24,6 +27,9 @@ class CalendarHandler:
     def _authenticate(self):
         """Autentica com a API do Google Calendar"""
         creds = None
+        
+        if not try_to_read_files(self.credentials_file) or not try_to_read_files(self.token_file):
+            raise FileNotFoundError("Arquivo de credenciais ou token não encontrado. Verifique o caminho e as permissões.")
         
         # Carrega token existente
         if os.path.exists(self.token_file):
