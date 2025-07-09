@@ -14,8 +14,8 @@ load_dotenv(dotenv_path="env/.env")
 
 class CalendarHandler:
     def __init__(self):
-        self.credentials_file = 'env/credentials.json'
-        self.token_file = 'env/token.pickle'
+        self.credentials_file = 'etc/secrets/credentials.json'
+        self.token_file = 'etc/secrets/token.pickle'
         self.service = None
         self.scopes = [os.getenv('GOOGLE_CALENDAR_SCOPE')]
         self.max_simultaneous_agendas = 5  # Limite de agendamentos simultâneos
