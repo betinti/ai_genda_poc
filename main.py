@@ -28,3 +28,10 @@ def recive_message(message):
     message_handler = MessageHandler()
     response = message_handler.handle_message(message)
     return {"response": response}
+
+@app.post("/recive_message")
+def recive_message(message):
+    print(message)
+    message_handler = MessageHandler()
+    response = message_handler.handle_message(message)
+    return {"response": response}
