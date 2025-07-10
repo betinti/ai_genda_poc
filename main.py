@@ -16,13 +16,15 @@ def health():
     }
 
 @app.post("/send-initial-message")
-def recive_message(to_phone_number: str):
+def recive_message(to_phone_number):
+    print(to_phone_number)
     message_handler = MessageHandler()
     response = message_handler.initialize_conversation(to_phone_number)
     return {"response": response}
 
 @app.post("/recive-message")
-def recive_message(message: str):
+def recive_message(message):
+    print(message)
     message_handler = MessageHandler()
     response = message_handler.handle_message(message)
     return {"response": response}
