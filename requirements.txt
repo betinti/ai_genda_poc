@@ -3,6 +3,7 @@ uvicorn
 twilio
 openai
 psutil
+xmltodict
 pytz
 google-auth
 google-auth-oauthlib

@@ -1,8 +1,9 @@
 import psutil
 import datetime
+import xmltodict
 from pydantic import BaseModel
+from fastapi import FastAPI, Request
 
-from fastapi import FastAPI
 from src.MessageHandler import MessageHandler
 
 app = FastAPI()
@@ -23,22 +24,34 @@ def health():
     }
 
 @app.post("/send-initial-message")
-def recive_message(request: PhoneNumberRequest):
-    print(request.to_phone_number)
+async def recive_message(request: Request):
+    body = await request.body()
+    data = xmltodict.parse(body)
+    # Adjust the path to 'to_phone_number' as per your XML structure
+    to_phone_number = data.get('root', {}).get('to_phone_number')
+    print(to_phone_number)
     message_handler = MessageHandler()
-    response = message_handler.initialize_conversation(request.to_phone_number)
+    response = message_handler.initialize_conversation(to_phone_number)
     return {"response": response}
 
 @app.post("/recive-message")
-def recive_message(request: MessageRequest):
-    print(request)
+async def recive_message(request: Request):
+    body = await request.body()
+    data = xmltodict.parse(body)
+    # Adjust the path to 'message' as per your XML structure
+    message = data.get('root', {}).get('message')
+    print(message)
     message_handler = MessageHandler()
-    response = message_handler.handle_message(request.message)
+    response = message_handler.handle_message(message)
     return {"response": response}
 
 @app.post("/recive_message")
-def recive_message(request: MessageRequest):
-    print(request)
+async def recive_message(request: Request):
+    body = await request.body()
+    data = xmltodict.parse(body)
+    # Adjust the path to 'message' as per your XML structure
+    message = data.get('root', {}).get('message')
+    print(message)
     message_handler = MessageHandler()
-    response = message_handler.handle_message(request.message)
+    response = message_handler.handle_message(message)
     return {"response": response}
