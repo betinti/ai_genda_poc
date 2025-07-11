@@ -1,10 +1,17 @@
 import psutil
 import datetime
+from pydantic import BaseModel
 
 from fastapi import FastAPI
 from src.MessageHandler import MessageHandler
 
 app = FastAPI()
+
+class PhoneNumberRequest(BaseModel):
+    to_phone_number: str
+
+class MessageRequest(BaseModel):
+    message: str
 
 @app.get("/health")
 def health():
@@ -16,22 +23,22 @@ def health():
     }
 
 @app.post("/send-initial-message")
-def recive_message(to_phone_number):
-    print(to_phone_number)
+def recive_message(request: PhoneNumberRequest):
+    print(request.to_phone_number)
     message_handler = MessageHandler()
-    response = message_handler.initialize_conversation(to_phone_number)
+    response = message_handler.initialize_conversation(request.to_phone_number)
     return {"response": response}
 
 @app.post("/recive-message")
-def recive_message(message):
-    print(message)
+def recive_message(request: MessageRequest):
+    print(request)
     message_handler = MessageHandler()
-    response = message_handler.handle_message(message)
+    response = message_handler.handle_message(request.message)
     return {"response": response}
 
 @app.post("/recive_message")
-def recive_message(message):
-    print(message)
+def recive_message(request: MessageRequest):
+    print(request)
     message_handler = MessageHandler()
-    response = message_handler.handle_message(message)
+    response = message_handler.handle_message(request.message)
     return {"response": response}
