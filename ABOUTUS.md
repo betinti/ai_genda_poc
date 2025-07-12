@@ -34,5 +34,11 @@ Trabalhamos com foco na excelência do relacionamento com o cliente, sempre resp
 
 ---
 
-📬 Fale conosco para saber mais ou iniciar sua jornada conosco (betinti@hotmail.com)!
+## 📬 Fale Conosco
 
+Entre em contato para saber mais ou iniciar sua jornada conosco:
+
+- 📧 E-mail: [betinti@hotmail.com](mailto:betinti@hotmail.com)  
+- 📞 WhatsApp / Telefone: [+55 27 99945-6688](https://wa.me/5527999456688)
+
+Estamos prontos para te atender!
