@@ -24,7 +24,8 @@ def health():
     }
 
 @app.post("/send-initial-message")
-async def recive_message(request: Request):
+async def recive_message(request):
+    print(request)
     body = await request.body()
     data = xmltodict.parse(body)
     # Adjust the path to 'to_phone_number' as per your XML structure
@@ -35,7 +36,8 @@ async def recive_message(request: Request):
     return {"response": response}
 
 @app.post("/recive-message")
-async def recive_message(request: Request):
+async def recive_message(request):
+    print(request)
     body = await request.body()
     data = xmltodict.parse(body)
     # Adjust the path to 'message' as per your XML structure
@@ -46,7 +48,8 @@ async def recive_message(request: Request):
     return {"response": response}
 
 @app.post("/recive_message")
-async def recive_message(request: Request):
+async def recive_message(request):
+    print(request)
     body = await request.body()
     data = xmltodict.parse(body)
     # Adjust the path to 'message' as per your XML structure
