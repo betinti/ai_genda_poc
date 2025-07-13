@@ -4,6 +4,7 @@ import xmltodict
 from pydantic import BaseModel
 from fastapi import FastAPI, Request
 
+from src.objects import TwilioMessage
 from src.MessageHandler import MessageHandler
 
 app = FastAPI()
@@ -24,37 +25,22 @@ def health():
     }
 
 @app.post("/send-initial-message")
-async def recive_message(request: Request):
+async def recive_message(request: TwilioMessage):
     print(request)
-    body = await request.body()
-    data = xmltodict.parse(body)
-    # Adjust the path to 'to_phone_number' as per your XML structure
-    to_phone_number = data.get('root', {}).get('to_phone_number')
-    print(to_phone_number)
     message_handler = MessageHandler()
-    response = message_handler.initialize_conversation(to_phone_number)
+    response = message_handler.initialize_conversation(request.to)
     return {"response": response}
 
 @app.post("/recive-message")
-async def recive_message(request: Request):
+async def recive_message(request: TwilioMessage):
     print(request)
-    body = await request.body()
-    data = xmltodict.parse(body)
-    # Adjust the path to 'message' as per your XML structure
-    message = data.get('root', {}).get('message')
-    print(message)
     message_handler = MessageHandler()
-    response = message_handler.handle_message(message)
+    response = message_handler.handle_message(request.body)
     return {"response": response}
 
 @app.post("/recive_message")
-async def recive_message(request: Request):
+async def recive_message(request: TwilioMessage):
     print(request)
-    body = await request.body()
-    data = xmltodict.parse(body)
-    # Adjust the path to 'message' as per your XML structure
-    message = data.get('root', {}).get('message')
-    print(message)
     message_handler = MessageHandler()
-    response = message_handler.handle_message(message)
+    response = message_handler.handle_message(request.body)
     return {"response": response}
