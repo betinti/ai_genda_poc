@@ -24,7 +24,7 @@ def health():
     }
 
 @app.post("/send-initial-message")
-async def recive_message(request):
+async def recive_message(request: Request):
     print(request)
     body = await request.body()
     data = xmltodict.parse(body)
@@ -36,7 +36,7 @@ async def recive_message(request):
     return {"response": response}
 
 @app.post("/recive-message")
-async def recive_message(request):
+async def recive_message(request: Request):
     print(request)
     body = await request.body()
     data = xmltodict.parse(body)
@@ -48,7 +48,7 @@ async def recive_message(request):
     return {"response": response}
 
 @app.post("/recive_message")
-async def recive_message(request):
+async def recive_message(request: Request):
     print(request)
     body = await request.body()
     data = xmltodict.parse(body)
