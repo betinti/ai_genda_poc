@@ -11,9 +11,10 @@ google-api-python-client
 python-dotenv
 sqlalchemy 
 psycopg2-binary
+pydantic
 
-qrcode
-opencv-python
-pyzbar
-Pillow
-numpy
+# qrcode
+# opencv-python
+# pyzbar
+# Pillow
+# numpy
