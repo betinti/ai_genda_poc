@@ -1,9 +1,11 @@
 import psutil
 import datetime
 import json
+import xmltodict
+
 
 from pydantic import BaseModel
-from fastapi import FastAPI
+from fastapi import FastAPI, Request, Response
 from src.models.TwilioMessageModel import TwilioMessageModel
 from src.MessageHandler import MessageHandler
 
@@ -32,12 +34,17 @@ def recive_message(request):
     return {"response": response}
 
 @app.post("/recive_message")
-def recive_message(request):
+def recive_message(request: str):
     print("Received request:", request)
-    data = json.loads(request)
-    print("Parsed data body:", data['body'])
-    message = TwilioMessageModel.parse_obj(data)
     
-    message_handler = MessageHandler()
-    response = message_handler.handle_message(message.body)
-    return {"response": response}
+    data_dict = xmltodict.parse(request)
+    print("Parsed XML data:", data_dict)
+    print("My message:", data_dict['Response']['Message']['Body'])
+    # data = json.loads(request)
+    # print("Parsed data body:", data['body'])
+    # message = TwilioMessageModel.parse_obj(data)
+    
+    # message_handler = MessageHandler()
+    # response = message_handler.handle_message(message.body)
+    
+    return {"response": data_dict['Response']['Message']['Body']}
