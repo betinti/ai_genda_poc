@@ -64,4 +64,4 @@ class MessageHandler:
         
         chat_handler.send_message(message, to_phone_number)
         
-        return {"status": "success", "message": f"Message sent to {to_phone_number}."}
+        return message
