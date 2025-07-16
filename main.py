@@ -31,7 +31,7 @@ async def recive_message(request):
     response = message_handler.initialize_conversation(request.to)
     return {"response": response}
 
-@app.post("/recive-message")
+@app.post("/recive_message")
 async def recive_message(request):
     data = json.loads(request)
     message = TwilioMessageModel.parse_obj(data)
