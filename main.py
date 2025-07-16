@@ -25,15 +25,17 @@ def health():
     }
 
 @app.post("/send-initial-message")
-async def recive_message(request):
-    print(request)
+def recive_message(request):
+    print("Received request:", request)
     message_handler = MessageHandler()
     response = message_handler.initialize_conversation(request.to)
     return {"response": response}
 
 @app.post("/recive_message")
-async def recive_message(request):
+def recive_message(request):
+    print("Received request:", request)
     data = json.loads(request)
+    print("Parsed data body:", data['body'])
     message = TwilioMessageModel.parse_obj(data)
     
     message_handler = MessageHandler()
