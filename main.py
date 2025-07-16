@@ -1,10 +1,10 @@
 import psutil
 import datetime
-import xmltodict
-from pydantic import BaseModel
-from fastapi import FastAPI, Request
+import json
 
-from src.objects import TwilioMessage
+from pydantic import BaseModel
+from fastapi import FastAPI
+from src.models.TwilioMessageModel import TwilioMessageModel
 from src.MessageHandler import MessageHandler
 
 app = FastAPI()
@@ -25,22 +25,17 @@ def health():
     }
 
 @app.post("/send-initial-message")
-async def recive_message(request: TwilioMessage):
+async def recive_message(request):
     print(request)
     message_handler = MessageHandler()
     response = message_handler.initialize_conversation(request.to)
     return {"response": response}
 
 @app.post("/recive-message")
-async def recive_message(request: TwilioMessage):
-    print(request)
+async def recive_message(request):
+    data = json.loads(request)
+    message = TwilioMessageModel.parse_obj(data)
+    
     message_handler = MessageHandler()
-    response = message_handler.handle_message(request.body)
-    return {"response": response}
-
-@app.post("/recive_message")
-async def recive_message(request: TwilioMessage):
-    print(request)
-    message_handler = MessageHandler()
-    response = message_handler.handle_message(request.body)
+    response = message_handler.handle_message(message.body)
     return {"response": response}
