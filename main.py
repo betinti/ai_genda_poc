@@ -42,8 +42,12 @@ def recive_message(request):
 @app.post("/recive_message")
 async def whatsapp_webhook_1(Body: str = Form(...)):
     # Body contains the message text
+    logging.info(f"Received form data: {Body}")
     
-    return {"status": Body}
+    message_handler = MessageHandler()
+    response = message_handler.handle_message(Body)
+    
+    return {"response": response}
 
 @app.post("/webhook_2")
 async def whatsapp_webhook_2(request: Request):
