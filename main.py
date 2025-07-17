@@ -40,9 +40,11 @@ def recive_message(request):
 @app.post("/recive_message")
 async def receive_message(Body: str = Form(None), From: str = Form(None)):
     # Body contains the message text
-    logging.info(f"Received Body '{Body}' and From '{From}'")
+    
+    from_ = From.split(":")[1]  # The phone number of the sender 
+    logging.info(f"Received Body '{Body}' and From '{from_}'")
     
     message_handler = MessageHandler()
-    response = message_handler.handle_message(Body, From)
+    response = message_handler.handle_message(Body, from_)
     
     return {"response": response}
