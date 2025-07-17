@@ -21,10 +21,10 @@ def health():
     }
 
 @app.post("/send-initial-message")
-def recive_message(request):
+def recive_message(request: str):
     print("Received request:", request)
     message_handler = MessageHandler()
-    response = message_handler.initialize_conversation(request.to)
+    response = message_handler.initialize_conversation(request)
     return {"response": response}
 
 @app.post("/recive_message")

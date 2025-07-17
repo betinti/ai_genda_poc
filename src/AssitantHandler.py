@@ -1,3 +1,4 @@
+import logging
 import openai
 import time
 import os 
@@ -5,6 +6,8 @@ import os
 from src.CommonHelper import file_to_string
 from src.CalendarHandler import CalendarHandler
 from dotenv import load_dotenv
+
+logging.basicConfig(level=logging.INFO)
 
 # Carrega o .env em um caminho específico
 load_dotenv(dotenv_path="env/.env")
@@ -36,6 +39,7 @@ class AssistantHandler:
                 thread_id=self.threadId,
                 run_id=run.id
             )
+            logging.info(f"Assitant status: '{run_status.status}'")
             if run_status.status == "completed":
                 break
             elif run_status.status == "requires_action":
