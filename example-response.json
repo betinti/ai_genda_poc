@@ -1,0 +1,24 @@
+{
+  "account_sid": "asd",
+  "api_version": "2010-04-01",
+  "body": "Your appointment is coming up on 12/1 at 3pm",
+  "date_created": "Sun, 13 Jul 2025 23:37:22 +0000",
+  "date_sent": null,
+  "date_updated": "Sun, 13 Jul 2025 23:37:22 +0000",
+  "direction": "outbound-api",
+  "error_code": null,
+  "error_message": null,
+  "from": "whatsapp:+14155238886",
+  "messaging_service_sid": null,
+  "num_media": "0",
+  "num_segments": "1",
+  "price": null,
+  "price_unit": null,
+  "sid": "qwerty",
+  "status": "queued",
+  "subresource_uris": {
+    "media": "/2010-04-01/Accounts/qwerty/Messages/qwerty/Media.json"
+  },
+  "to": "whatsapp:+5527999458866",
+  "uri": "/2010-04-01/Accounts/qwerty/Messages/qwerty.json"
+}
