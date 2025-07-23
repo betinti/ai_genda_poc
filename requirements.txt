@@ -12,7 +12,7 @@ python-dotenv
 sqlalchemy 
 psycopg2-binary
 pydantic
-qrcode
+qrcode[pil]
 requests
 logging
 
