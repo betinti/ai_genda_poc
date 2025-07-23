@@ -12,11 +12,6 @@ python-dotenv
 sqlalchemy 
 psycopg2-binary
 pydantic
-
-python-multipart
-
-# qrcode
-# opencv-python
-# pyzbar
-# Pillow
-# numpy
+qrcode
+requests
+logging
