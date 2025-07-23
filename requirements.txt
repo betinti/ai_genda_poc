@@ -15,3 +15,5 @@ pydantic
 qrcode
 requests
 logging
+
+python-multipart
