@@ -54,7 +54,7 @@ async def confirm_agenda_attendance(agenda_id: str):
     return {"message": "Attendance confirmed", "agenda_id": agenda_id}
     
 
-@app.post("/receive_message")
+@app.post("/recive_message")
 async def receive_message(
     Body: str = Form(None), 
     From: str = Form(None),
