@@ -3,6 +3,7 @@ import openai
 import time
 import os 
 
+from src.QrcodeService import QrCodeService
 from src.CommonHelper import file_to_string
 from src.CalendarHandler import CalendarHandler
 from dotenv import load_dotenv
@@ -18,6 +19,7 @@ class AssistantHandler:
         self.assistantId : str = os.getenv('OPENAI_ASSISTANT_ID')
         thread = openai.beta.threads.create()
         self.threadId = thread.id
+        self.qrcode_service = QrCodeService()
 
     def get_assistant_response(self, message: str):
         # Add a message from the user
@@ -33,6 +35,8 @@ class AssistantHandler:
             assistant_id=self.assistantId
         )
         
+        qrcode_url = None
+        
         # Pulling the run status until it is completed to get the response
         while True:
             run_status = openai.beta.threads.runs.retrieve(
@@ -43,24 +47,36 @@ class AssistantHandler:
             if run_status.status == "completed":
                 break
             elif run_status.status == "requires_action":
-                self.handle_required_action(run, run_status)
+                qrcode_url = self.handle_required_action(run, run_status)
                 break
             time.sleep(1)
 
         messages = openai.beta.threads.messages.list(thread_id = self.threadId)
         
         # Get the last message which is from the assistant
-        return messages.data[0].content[0].text.value
+        
+        return {
+            'message': messages.data[0].content[0].text.value,
+            'qrcode_url': qrcode_url
+            }
 
     def handle_required_action(self, run, run_status):
-        
-        calendar_handler = CalendarHandler()
-                
         tool_call = run_status.required_action.submit_tool_outputs.tool_calls[0]
         model_dump = run_status.required_action.submit_tool_outputs.model_dump()
+        
         if tool_call.function.name == "visit_scheduler":
+            
+            calendar_handler = CalendarHandler()    
             response = calendar_handler.schedule_visit(model_dump)
-            self.retrieving_action(run.id, response, tool_call.id)
+            
+            self.retrieving_action(run.id, response['response'], tool_call.id)
+            
+            agenda_url = f"{os.getenv('RENDER_WEBSERVICE_URL')}/confirm_agenda_attendance?agenda_id={response['agenda']['id']}"
+            qrcode_url = self.qrcode_service.qr_code_generator(agenda_url)['url']
+            
+            logging.info(f"QR Code URL created: {qrcode_url}")
+            
+            return qrcode_url
 
     def retrieving_action(self, runId, response, tool_call_id):
         """

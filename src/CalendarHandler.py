@@ -68,14 +68,19 @@ class CalendarHandler:
 
         if len(agendas) < self.max_simultaneous_agendas:
             # Criar nova agenda
-            self.criar_agenda(
+            response = self.criar_agenda(
                 title="Visita técnica agendada",
                 date_begin=agenda,
                 date_end=agenda_end,
                 description="Visita técnica agendada pelo assistente virtual",
                 local="Sua concessionária BYD"
                 )
-            return "Responda que a visita foi agendada com sucesso no horário informado!. Pergunte se o usuário precisa de mais alguma coisa ou se deseja encerrar a conversa."
+            
+            body = {
+                "response": "Responda que a visita foi agendada com sucesso no horário informado!. Pergunte se o usuário precisa de mais alguma coisa ou se deseja encerrar a conversa.",
+                "agenda": response
+            }
+            return body
         else :
             return "Responda que o horário está indisponível, peça com educação para que o usuário escolha outro horário de sua prefência."
         
