@@ -1,8 +1,8 @@
-from fastapi.params import Form
 import psutil
 import datetime
 import logging
 
+from fastapi.params import Form
 from fastapi import FastAPI
 from src.QrcodeService import QrCodeService
 from src.MessageHandler import MessageHandler
@@ -42,21 +42,30 @@ def image_message_test():
     
     return {"response": result}
 
-@app.post("/recive_message")
+@app.post("/confirm_agenda_attendance")
+async def confirm_agenda_attendance(agenda_id: str):
+    """
+    Endpoint to confirm agenda attendance.
+    """
+    logging.info(f"Agenda ID received: {agenda_id}")
+    
+    # Here you would typically handle the confirmation logic, e.g., updating a database record.
+    
+    return {"message": "Attendance confirmed", "agenda_id": agenda_id}
+    
+
+@app.post("/receive_message")
 async def receive_message(
     Body: str = Form(None), 
     From: str = Form(None),
-    NumMedia: str = Form(None)
+    NumMedia = Form(None)
     ):
     # Body contains the message text
-    
-    from_ = From.split(":")[1]  # The phone number of the sender 
-    logging.info(f"Received Body '{Body}' and From '{from_}'")
     
     if NumMedia is not None:
         logging.info(f"Received media message with {NumMedia} media items.")
     
     message_handler = MessageHandler()
-    response = message_handler.handle_message(Body, from_)
+    response = message_handler.handle_message(Body, From)
 
     return response

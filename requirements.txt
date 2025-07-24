@@ -16,4 +16,4 @@ qrcode[pil]
 requests
 logging
 
-python-multipart
+python-multipart #never delete this line, it is used by the vscode-scm extension and Render

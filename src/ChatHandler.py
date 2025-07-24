@@ -15,14 +15,24 @@ class ChatHandler:
         
         self.client = Client(account_sid, auth_token)
         
-    def send_message(self, body, number_to, number_from=None):
+    def send_message(self, body, number_to, number_from=None, image_url: str = None):
         if number_from is None:
             number_from = self.default_from_number
-        message = self.client.messages.create(
-            to=f"whatsapp:{number_to}",
-            from_=f"whatsapp:{number_from}",
-            body=body
-        )
+            
+        if image_url is not None:
+            message = self.client.messages.create(
+                to=f"whatsapp:{number_to}",
+                from_=f"whatsapp:{number_from}",
+                body=body,
+                media_url=[image_url],
+            )
+        else:
+            message = self.client.messages.create(
+                to=f"whatsapp:{number_to}",
+                from_=f"whatsapp:{number_from}",
+                body=body
+            )
+            
         return message.sid
     
     def get_messages(self, to=None, from_=None):
