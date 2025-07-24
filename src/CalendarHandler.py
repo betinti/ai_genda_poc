@@ -1,15 +1,14 @@
+import logging
 import pytz
 import os
-import pickle
 
-from src.CommonHelper import try_to_read_files
 
 from datetime import datetime, timedelta
-from google.auth.transport.requests import Request
-from google_auth_oauthlib.flow import InstalledAppFlow
 from googleapiclient.discovery import build
 from googleapiclient.errors import HttpError
 from dotenv import load_dotenv
+
+logging.basicConfig(level=logging.INFO)
 
 # Carrega o .env em um caminho específico
 load_dotenv(dotenv_path="env/.env")
@@ -17,39 +16,33 @@ load_dotenv(dotenv_path="env/.env")
 class CalendarHandler:
     def __init__(self):
         secret_path = os.getenv('GOOGLE_SECRETS_PATH')
-        self.credentials_file = f'{secret_path}credentials.json'
-        self.token_file = f'{secret_path}token.pickle'
+        self.service_account_file = f'{secret_path}service-account-key.json'
         self.service = None
         self.scopes = [os.getenv('GOOGLE_CALENDAR_SCOPE')]
         self.max_simultaneous_agendas = 5  # Limite de agendamentos simultâneos
         self._authenticate()
     
     def _authenticate(self):
-        """Autentica com a API do Google Calendar"""
-        creds = None
-        
-        if not try_to_read_files(self.credentials_file) or not try_to_read_files(self.token_file):
-            raise FileNotFoundError("Arquivo de credenciais ou token não encontrado. Verifique o caminho e as permissões.")
-        
-        # Carrega token existente
-        if os.path.exists(self.token_file):
-            with open(self.token_file, 'rb') as token:
-                creds = pickle.load(token)
-        
-        # Autentica se necessário
-        if not creds or not creds.valid:
-            if creds and creds.expired and creds.refresh_token:
-                creds.refresh(Request())
-            else:
-                flow = InstalledAppFlow.from_client_secrets_file(
-                    self.credentials_file, self.scopes)
-                creds = flow.run_local_server(port=0)
+        """Autentica usando Service Account"""
+        try:
+            from google.oauth2 import service_account
             
-            # Salva as credenciais
-            with open(self.token_file, 'wb') as token:
-                pickle.dump(creds, token)
-        
-        self.service = build('calendar', 'v3', credentials=creds)
+            if not os.path.exists(self.service_account_file):
+                raise FileNotFoundError(f"Service account file não encontrado: {self.service_account_file}")
+            
+            # Carrega credenciais da service account
+            credentials = service_account.Credentials.from_service_account_file(
+                self.service_account_file, scopes=self.scopes)
+            
+            # Inicializa serviços
+            self.service = build('calendar', 'v3', credentials=credentials)
+            
+            logging.info("Service Account autenticada com sucesso")
+            
+        except Exception as e:
+            logging.error(f"Erro na autenticação com Service Account: {e}")
+            raise
+
     
     def schedule_visit(self, gptCall):
         """Para exemple: {'tool_calls': [{'id': 'call_Fp1BAtsH06fPEKkeHmuxFd18', 'function': {'arguments': '{"day": 10, "month": 10, "hour": 12}', 'name': 'visit_scheduler'}, 'type': 'function'}]}"""
