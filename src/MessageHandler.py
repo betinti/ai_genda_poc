@@ -77,6 +77,6 @@ class MessageHandler:
         print(f"Sending message: {message} to {to_phone_number}")
         chat_handler = ChatHandler()
         
-        chat_handler.send_message(message, to_phone_number, image_url="https://images.unsplash.com/photo-1545093149-618ce3bcf49d?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=668&q=80")
+        chat_handler.send_message(message, to_phone_number, image_url=image)
         
         return message
