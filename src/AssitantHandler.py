@@ -63,10 +63,11 @@ class AssistantHandler:
     def handle_required_action(self, run, run_status):
         tool_call = run_status.required_action.submit_tool_outputs.tool_calls[0]
         model_dump = run_status.required_action.submit_tool_outputs.model_dump()
+
+        calendar_handler = CalendarHandler()    
         
         if tool_call.function.name == "visit_scheduler":
             
-            calendar_handler = CalendarHandler()    
             response = calendar_handler.schedule_visit(model_dump)
             
             self.retrieving_action(run.id, response['response'], tool_call.id)
