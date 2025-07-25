@@ -68,7 +68,7 @@ class CalendarHandler:
                 description="Visita técnica agendada pelo assistente virtual",
                 local="Sua concessionária BYD"
                 )
-            
+
             body = {
                 "response": "Responda que a visita foi agendada com sucesso no horário informado!. Pergunte se o usuário precisa de mais alguma coisa ou se deseja encerrar a conversa.",
                 "agenda": response
@@ -76,6 +76,61 @@ class CalendarHandler:
             return body
         else :
             return "Responda que o horário está indisponível, peça com educação para que o usuário escolha outro horário de sua prefência."
+
+    def get_all_agendas(self, calendar_id='primary'):
+        """
+        Retorna todas as agendas do calendário
+        
+        Args:
+            calendar_id (str): ID do calendário (padrão: 'primary')
+        
+        Returns:
+            list: Lista de eventos encontrados com informações básicas
+        """
+        try:
+            # Busca todos os eventos
+            events_result = self.service.events().list(
+                calendarId=calendar_id,
+                singleEvents=True,
+                orderBy='startTime',
+                maxResults=100  # Limite para evitar problemas
+            ).execute()
+            
+            events = events_result.get('items', [])
+            
+            if len(events) == 0:
+                return []
+            
+            # Formata os eventos para retorno
+            agendas = []
+            for event in events:
+                start_datetime = event['start'].get('dateTime')
+                start_date = event['start'].get('date')
+                end_datetime = event['end'].get('dateTime')
+                end_date = event['end'].get('date')
+                
+                start = start_datetime if start_datetime else start_date
+                end = end_datetime if end_datetime else end_date
+                
+                agenda = {
+                    'id': event['id'],
+                    'titulo': event.get('summary', 'Sem título'),
+                    'descricao': event.get('description', ''),
+                    'inicio': start,
+                    'fim': end,
+                    'local': event.get('location', ''),
+                    'criador': event.get('creator', {}).get('email', ''),
+                    'status': event.get('status', ''),
+                    'tipo_evento': 'dia_inteiro' if start_date else 'horario_especifico'
+                }
+                agendas.append(agenda)
+            
+            return agendas
+            
+        except Exception as error:
+            print(f"Erro ao consultar agendas: {error}")
+            print(f"Tipo do erro: {type(error).__name__}")
+            return []    
         
     def check_agenda(self, date_begin, date_end=None, calendar_id='primary'):
         """

@@ -4,6 +4,7 @@ import logging
 
 from fastapi.params import Form
 from fastapi import FastAPI
+from src.CalendarHandler import CalendarHandler
 from src.QrcodeService import QrCodeService
 from src.MessageHandler import MessageHandler
 
@@ -69,3 +70,14 @@ async def receive_message(
     response = message_handler.handle_message(Body, From)
 
     return response
+
+@app.post("/check_all_agendas")
+async def check_all_agendas():
+    """
+    Endpoint to check all agendas.
+    """
+    calendar_handler = CalendarHandler()
+    response = calendar_handler.get_all_agendas()
+    
+    return response
+
